@@ -2,8 +2,11 @@ package mqtt;
 
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+import philipshue.PhilipshueRequester;
 
 import java.io.UnsupportedEncodingException;
+
+import static philipshue.PhilipshueRequester.PutToPHue;
 
 public class Main {
 
@@ -80,6 +83,18 @@ public class Main {
     protected static void handleNewMessage(String topic, String message){
         System.out.println(topic + ": " + message);
 
+        String objectType = topic.substring(0,topic.indexOf("/"));
+        String objectName = topic.substring(topic.indexOf("/")+1);
+        System.out.println("CUT: "+objectType +" -- "+objectName);
+
+        if (objectType.equalsIgnoreCase("philipshue")){
+            if(message.equalsIgnoreCase("on"))
+                //Switch light on
+                PhilipshueRequester.PutToPHue(objectName,"on");
+            else if (message.equalsIgnoreCase("off"))
+                PhilipshueRequester.PutToPHue(objectName,"off");
+
+        }
 
     }
 
