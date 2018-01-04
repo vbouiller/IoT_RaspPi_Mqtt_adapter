@@ -2,11 +2,7 @@ package mqtt;
 
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
-import philipshue.PhilipshueRequester;
-
-import java.io.UnsupportedEncodingException;
-
-import static philipshue.PhilipshueRequester.PutToPHue;
+import actuatorRequesters.PhilipshueRequester;
 
 public class Main {
 
@@ -88,10 +84,10 @@ public class Main {
             String objectType = null;
             String objectName = null;
 
-            if (topic.indexOf("/") != -1) {
+            if (topic.contains("/")){
                 objectType = topic.substring(0,topic.indexOf("/"));
                 objectName = topic.substring(topic.indexOf("/")+1);
-            } else{
+            } else {
                 objectType = topic;
                 objectName = "";
             }

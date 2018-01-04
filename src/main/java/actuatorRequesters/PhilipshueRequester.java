@@ -1,4 +1,4 @@
-package philipshue;
+package actuatorRequesters;
 
 
 import org.apache.http.client.methods.HttpPost;
