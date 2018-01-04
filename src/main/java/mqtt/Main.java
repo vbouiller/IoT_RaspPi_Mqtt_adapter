@@ -4,9 +4,6 @@ import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
-
-import static com.sun.xml.internal.org.jvnet.fastinfoset.FastInfosetSerializer.UTF_8;
 
 public class Main {
 
@@ -22,7 +19,7 @@ public class Main {
 
     //Handles MQTT Client connection, Callback setup, and subscription
     private static void mqttClientConnection(MqttClient mqttClient, String topic){
-        
+
         try {
 
             //Instantiate MqttClient
@@ -49,8 +46,8 @@ public class Main {
 
                 @Override
                 public void messageArrived(String topic, MqttMessage message) throws Exception {
-                    System.out.println(topic + ": " + message.toString());//Arrays.toString(message.getPayload()));
-                    handleNewMessage(topic, Arrays.toString(message.getPayload()));
+                    //System.out.println(topic + ": " + message.toString());
+                    handleNewMessage(topic, message.toString());
                 }
 
                 @Override
@@ -72,17 +69,17 @@ public class Main {
 
             client.publish(
                     "RPi/MqttAdapter/connexion", // topic
-                    "Successfully connected".getBytes(UTF_8), // payload
+                    "Successfully connected - From jar".getBytes(), // payload
                     2, // QoS
                     false); // retained?
         } catch (MqttException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
     }
 
     protected static void handleNewMessage(String topic, String message){
+        System.out.println(topic + ": " + message);
+
 
     }
 
