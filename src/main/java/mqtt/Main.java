@@ -44,7 +44,8 @@ public class Main {
 
                 @Override
                 public void connectionLost(Throwable cause) { //Called when the client lost the connection to the broker
-                    System.out.println("-- Connection List");
+                    System.out.println("-- Connection Lost");
+                    cause.printStackTrace();
                 }
 
                 @Override
@@ -83,17 +84,32 @@ public class Main {
     protected static void handleNewMessage(String topic, String message){
         System.out.println(topic + ": " + message);
 
-        String objectType = topic.substring(0,topic.indexOf("/"));
-        String objectName = topic.substring(topic.indexOf("/")+1);
-        System.out.println("CUT: "+objectType +" -- "+objectName);
+        if (topic != null || !topic.equalsIgnoreCase("")) {
+            String objectType = null;
+            String objectName = null;
 
-        if (objectType.equalsIgnoreCase("philipshue")){
-            if(message.equalsIgnoreCase("on"))
-                //Switch light on
-                PhilipshueRequester.PutToPHue(objectName,"on");
-            else if (message.equalsIgnoreCase("off"))
-                PhilipshueRequester.PutToPHue(objectName,"off");
+            if (topic.indexOf("/") != -1) {
+                objectType = topic.substring(0,topic.indexOf("/"));
+                objectName = topic.substring(topic.indexOf("/")+1);
+            } else{
+                objectType = topic;
+                objectName = "";
+            }
 
+            if (objectType.equalsIgnoreCase("philipshue")){
+                System.out.println("== Philips Hue request:");
+                if(message.equalsIgnoreCase("on")) {
+                    //Switch light on
+                    System.out.println("==== Turn on light "+objectName);
+                    PhilipshueRequester.PutToPHue(objectName, "on");
+                }
+                else if (message.equalsIgnoreCase("off")) {
+                    //Switch light off
+                    System.out.println("==== Turn off light "+objectName);
+                    PhilipshueRequester.PutToPHue(objectName, "off");
+                }
+
+            }
         }
 
     }
