@@ -34,6 +34,7 @@ public class Main {
             philipsHueBridgeIP =  "192.168.0.134";
         }
         philipsHueUsername = philipsHueKeyRetriever(philipsHueBridgeIP);
+        //PhilipshueRequester.PutToPHue(philipsHueBridgeIP, philipsHueUsername, "1", true);
         mqttClientConnection(client, topic);
 
     }
@@ -124,12 +125,12 @@ public class Main {
                 if(message.equalsIgnoreCase("on")) {
                     //Switch light on
                     System.out.println("==== Turn on light "+objectName);
-                    PhilipshueRequester.PutToPHue(philipsHueBridgeIP, philipsHueUsername, objectName, "on");
+                    PhilipshueRequester.PutToPHue(philipsHueBridgeIP, philipsHueUsername, objectName, true);
                 }
                 else if (message.equalsIgnoreCase("off")) {
                     //Switch light off
                     System.out.println("==== Turn off light "+objectName);
-                    PhilipshueRequester.PutToPHue(philipsHueBridgeIP, philipsHueUsername,objectName, "off");
+                    PhilipshueRequester.PutToPHue(philipsHueBridgeIP, philipsHueUsername,objectName, false);
                 }
 
             }
