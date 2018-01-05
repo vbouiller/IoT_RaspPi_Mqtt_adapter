@@ -13,10 +13,10 @@ import java.io.IOException;
 public class PhilipshueRequester {
 
     //Definition strings
-    private static String PHUE_PROTOCOL = "http://";
-    private static String PHUE_BRIDGE_URL = "192.168.0.0/api/";
-    private static String PHUE_PRIVATE_KEY = "XXXXXXX/";
-    private static String PHUE_LIGHT = "lights/";
+    public static final String PHUE_PROTOCOL = "http://";
+    public static final String PHUE_BRIDGE_API = "/api/";
+    private static final String PHUE_LIGHT = "lights/";
+    private static final String PHUE_LIGHT_STATE = "state/";
 
 
 
@@ -25,9 +25,9 @@ public class PhilipshueRequester {
     }
 
 
-    public static void PutToPHue(String lightId, String statusToPut) {
+    public static void PutToPHue(String PhilipsHueBridgeIP, String PhilipsHueUsername, String lightId, String statusToPut) {
         //String TEST_ON_API = "https://pure-basin-20770.herokuapp.com/api/rooms/1/switch/light";
-        String url = PHUE_PROTOCOL + PHUE_BRIDGE_URL + PHUE_PRIVATE_KEY + PHUE_LIGHT + lightId;
+        String url = PHUE_PROTOCOL + PhilipsHueBridgeIP + PHUE_BRIDGE_API + PhilipsHueUsername + PHUE_LIGHT + lightId + PHUE_LIGHT_STATE;
 
         JSONObject json = new JSONObject();
         try {
