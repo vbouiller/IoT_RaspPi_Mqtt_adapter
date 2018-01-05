@@ -25,16 +25,18 @@ public class Main {
     static String philipsHueUsername;
 
 
+
     public static void main(String[] args) {
 
         String topic = "#";
-        if (args.length == 1) {
+        if (args.length >= 1) {
             philipsHueBridgeIP =  args[0]; //"192.168.0.134";
         } else {
             philipsHueBridgeIP =  "192.168.0.134";
         }
         philipsHueUsername = philipsHueKeyRetriever(philipsHueBridgeIP);
-        //PhilipshueRequester.PutToPHue(philipsHueBridgeIP, philipsHueUsername, "1", true);
+        JSONArray PHueLights = PhilipshueRequester.GetPHueLights(philipsHueBridgeIP, philipsHueUsername);
+
         mqttClientConnection(client, topic);
 
     }
@@ -132,6 +134,10 @@ public class Main {
                     System.out.println("==== Turn off light "+objectName);
                     PhilipshueRequester.PutToPHue(philipsHueBridgeIP, philipsHueUsername,objectName, false);
                 }
+                else if (message.equalsIgnoreCase("refresh")){
+                    System.out.println("==== Searching for PHue Lights ");
+                    PhilipshueRequester.GetPHueLights(philipsHueBridgeIP,philipsHueUsername);
+                }
 
             }
         }
@@ -218,6 +224,36 @@ public class Main {
 
 
         return username;
+    }
+
+    //Sends JSONArray of lights: id, level and status to the DB
+    private static void sendToAPIPHueLights(JSONArray PHueLights){
+        String url = "https://pure-basin-20770.herokuapp.com/api/rooms/PHueRefresh"; //API URL
+
+
+        //HTTP client and response
+        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+
+
+        try {
+            //Create and set parameters of request
+            HttpPost request = new HttpPost(url);
+            StringEntity params = new StringEntity(PHueLights.toString());
+            request.addHeader("content-type", "application/json");
+            request.setEntity(params);
+
+            httpClient.execute(request);
+
+        } catch (Exception ex) {
+            // handle exception here
+            ex.printStackTrace();
+        } finally {
+            try {
+                httpClient.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 
