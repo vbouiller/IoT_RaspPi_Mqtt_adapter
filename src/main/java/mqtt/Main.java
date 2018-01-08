@@ -32,7 +32,8 @@ public class Main {
         if (args.length >= 1) {
             philipsHueBridgeIP =  args[0]; //"192.168.0.134";
         } else {
-            philipsHueBridgeIP =  "192.168.0.134";
+            System.out.println("Connecting to default bridge on 192.168.220.52");
+            philipsHueBridgeIP =  "192.168.220.52";
         }
         philipsHueUsername = philipsHueKeyRetriever(philipsHueBridgeIP);
         JSONArray PHueLights = PhilipshueRequester.GetPHueLights(philipsHueBridgeIP, philipsHueUsername);
@@ -123,20 +124,22 @@ public class Main {
             }
 
             if (objectType.equalsIgnoreCase("philipshue")){
+
                 System.out.println("== Philips Hue request:");
                 if(message.equalsIgnoreCase("on")) {
                     //Switch light on
-                    System.out.println("==== Turn on light "+objectName);
+                    System.out.println("  |== Turn on light "+objectName);
                     PhilipshueRequester.PutToPHue(philipsHueBridgeIP, philipsHueUsername, objectName, true);
                 }
                 else if (message.equalsIgnoreCase("off")) {
                     //Switch light off
-                    System.out.println("==== Turn off light "+objectName);
+                    System.out.println("  |== Turn off light "+objectName);
                     PhilipshueRequester.PutToPHue(philipsHueBridgeIP, philipsHueUsername,objectName, false);
                 }
                 else if (message.equalsIgnoreCase("refresh")){
-                    System.out.println("==== Searching for PHue Lights ");
-                    PhilipshueRequester.GetPHueLights(philipsHueBridgeIP,philipsHueUsername);
+                    System.out.println("  |== Searching for PHue Lights ");
+                    JSONArray pHueLights = PhilipshueRequester.GetPHueLights(philipsHueBridgeIP,philipsHueUsername);
+                    sendToAPIPHueLights(pHueLights);
                 }
 
             }
@@ -227,7 +230,7 @@ public class Main {
     }
 
     //Sends JSONArray of lights: id, level and status to the DB
-    private static void sendToAPIPHueLights(JSONArray PHueLights){
+    private static void sendToAPIPHueLights(JSONArray pHueLights){
         String url = "https://pure-basin-20770.herokuapp.com/api/rooms/PHueRefresh"; //API URL
 
 
@@ -238,7 +241,7 @@ public class Main {
         try {
             //Create and set parameters of request
             HttpPost request = new HttpPost(url);
-            StringEntity params = new StringEntity(PHueLights.toString());
+            StringEntity params = new StringEntity(pHueLights.toString());
             request.addHeader("content-type", "application/json");
             request.setEntity(params);
 

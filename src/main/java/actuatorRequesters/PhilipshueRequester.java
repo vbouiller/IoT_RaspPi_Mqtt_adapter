@@ -107,6 +107,8 @@ public class PhilipshueRequester {
                 e.printStackTrace();
             }
         }
+
+        System.out.println("     |== " + philipsHueLighsJSON);
         return philipsHueLighsJSON;
     }
 
